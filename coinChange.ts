@@ -2,42 +2,24 @@
 
 function coinChange(coins: number[], amount: number): number {
   if (amount === 0) return 0;
-
-  // BFS approach
-  const seen = new Set<string>();
-  const stack = [Array(coins.length).fill(0)];
-
-  while (stack.length > 0) {
-    const cur = stack.shift()!;
-    seen.add(cur.toString());
-    const value = getValue(coins, cur);
-    if (value === amount) return cur.reduce((c, a) => c + a);
-    if (value > amount) continue;
-    stack.push(...getNeighbors(coins, seen, cur))
-  }
-
-  return -1;
-}
-
-function getValue(coins: number[], count: number[]): number {
-  let sum = 0;
-  for (let i = 0; i < coins.length; i++) {
-    sum += coins[i] * count[i];
-  }
-  return sum;
-}
-
-function getNeighbors(coins: number[], seen: Set<string>, count: number[]):
-  number[][] {
-  const output: number[][] = [];
-  for (let i = 0; i < coins.length; i++) {
-    const neighbor = count.slice();
-    neighbor[i]++;
-    if (!seen.has(neighbor.toString())) {
-      output.push(neighbor);
+  coins.sort((a, b) => a - b);
+  const fewestCoins = Array<number>(amount + 1).fill(-1);
+  for (let i = 1; i <= amount; i++) {
+    for (const coin of coins) {
+      if (coin > i) break;
+      if (coin === i) {
+        fewestCoins[i] = 1;
+        break;
+      }
+      const d = i - coin;
+      if (d > 0 && fewestCoins[d] !== -1) {
+        if (fewestCoins[i] === -1 || fewestCoins[i] > fewestCoins[d] + 1) {
+          fewestCoins[i] = fewestCoins[d] + 1;
+        }
+      }
     }
   }
-  return output
+  return fewestCoins[amount];
 }
 
 
