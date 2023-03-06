@@ -1,3 +1,5 @@
+import { test } from './test';
+
 // https://leetcode.com/problems/top-k-frequent-elements/
 
 function topKFrequent(nums: number[], k: number): number[] {
@@ -11,14 +13,6 @@ function topKFrequent(nums: number[], k: number): number[] {
     .slice(0, k);
 };
 
-function test(nums: number[], k: number, expected: number[]) {
-  const actual = topKFrequent(nums, k);
-  if (actual.toString() === expected.toString()) {
-    console.log('pass', nums, k, expected);
-  } else {
-    console.log('fail', nums, k, expected, actual);
-  }
-}
 
-test([1, 1, 1, 2, 2, 3], 2, [1, 2]);
-test([1], 1, [1]);
+test(topKFrequent, [[1, 1, 1, 2, 2, 3], 2], [1, 2]);
+test(topKFrequent, [[1], 1], [1]);
