@@ -38,18 +38,24 @@ function serialize(root: TreeNode | null): string {
  */
 function deserialize(data: string): TreeNode | null {
   if (data === '') return null;
-  return deserializeArray(data.split(','), 0);
+  const array = data.split(',');
+  const root = new TreeNode(Number(array[0]));
+  const stack: [TreeNode, number][] = [[root, 0]];
+  while (stack.length > 0) {
+    const [node, index] = stack.shift()!;
+    const left = 2 * index + 1;
+    if (left < array.length && array[left]) {
+      node.left = new TreeNode(Number(array[left]));
+      stack.push([node.left, left]);
+    }
+    const right = 2 * index + 2;
+    if (right < array.length && array[right]) {
+      node.right = new TreeNode(Number(array[right]));
+      stack.push([node.right, right]);
+    }
+  }
+  return root;
 }
-
-function deserializeArray(data: string[], index: number): TreeNode | null {
-  if (index >= data.length || !data[index]) return null;
-  return {
-    val: Number(data[index]),
-    left: deserializeArray(data, 2 * index + 1),
-    right: deserializeArray(data, 2 * index + 2),
-  };
-}
-
 
 assert(serialize,
   new TreeNode(
